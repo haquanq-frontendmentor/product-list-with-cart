@@ -1,6 +1,6 @@
 {
-  "name": "fm-product-list-with-card",
-  "description": "Solution for frontendmentor.io challenge: product-list-with-card",
+  "name": "fm-product-list-with-cart",
+  "description": "Solution for frontendmentor.io challenge: product-list-with-cart",
   "author": "haquanq",
   "license": "MIT",
   "type": "module",
