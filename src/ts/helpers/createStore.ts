@@ -19,6 +19,10 @@ export const createStore = <T>(initialState: T) => {
             listenerMap.set(listener, []);
         }
         listenerMap.get(listener)?.push(callback);
+
+        return () => {
+            listenerMap.set(listener, listenerMap.get(listener)?.filter((v) => v !== callback) || []);
+        };
     };
 
     return {
