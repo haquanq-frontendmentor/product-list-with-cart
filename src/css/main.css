@@ -1,3 +1,21 @@
 @import "./base/fonts.css";
 @import "./base/variables.css";
 @import "./base/reset.css";
+
+@import "./utils/a11y.css";
+
+@import "./components/button.css";
+@import "./components/products.css";
+@import "./components/cart.css";
+
+.main {
+    &__container {
+        width: min(100vw - 3rem, 76rem);
+        margin-inline: auto;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding-block: clamp(1.5rem, 0.0915rem + 6.0095vw, 5.5rem);
+    }
+}

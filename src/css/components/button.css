@@ -1,0 +1,23 @@
+.btn {
+    background-color: var(--color-red-500);
+    color: var(--color-rose-50);
+    font-weight: var(--font-semi-bold);
+    cursor: pointer;
+    border: 0;
+    border-radius: 50rem;
+    width: 100%;
+    padding: 1.125rem 1.1875rem;
+    transition-property: background-color;
+    transition-timing-function: ease;
+    transition-duration: 200ms;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--color-red-700);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
