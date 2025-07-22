@@ -14,14 +14,17 @@ export const createStore = <T>(initialState: T) => {
         }
     };
 
-    const subscribe = (callback: (state: T) => void, listener: string) => {
-        if (!listenerMap.has(listener)) {
-            listenerMap.set(listener, []);
-        }
-        listenerMap.get(listener)?.push(callback);
-
+    const subscribe = (callback: (state: T) => void, listeners: string[]) => {
+        listeners.forEach((key) => {
+            if (!listenerMap.has(key)) {
+                listenerMap.set(key, []);
+            }
+            listenerMap.get(key)?.push(callback);
+        });
         return () => {
-            listenerMap.set(listener, listenerMap.get(listener)?.filter((v) => v !== callback) || []);
+            listeners.forEach((key) => {
+                listenerMap.set(key, listenerMap.get(key)?.filter((v) => v !== callback) || []);
+            });
         };
     };
 
