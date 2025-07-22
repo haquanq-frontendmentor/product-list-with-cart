@@ -1,6 +1,7 @@
 :root {
     --color-green: hsl(159, 69%, 38%);
 
+    --color-red-300: hsl(14, 86%, 62%);
     --color-red-500: hsl(14, 86%, 42%);
     --color-red-700: hsl(14, 86%, 22%);
 
