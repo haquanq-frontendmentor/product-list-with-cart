@@ -5,9 +5,13 @@
     border-radius: 50rem;
     width: 100%;
     padding: 1.125rem 1.1875rem;
-    transition-property: background-color;
+    transition-property: background-color, transform;
     transition-timing-function: ease;
     transition-duration: 200ms;
+
+    &:active {
+        transform: scale(0.95);
+    }
 
     @media (hover: hover) {
         &:hover {
