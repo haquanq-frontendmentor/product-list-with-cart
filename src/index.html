@@ -128,6 +128,41 @@
           </div>
         </section>
       </div>
+      <div
+        class="confirm-modal"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby="confirm-modal-title"
+        aria-describedby="confirm-modal-description"
+      >
+        <div class="confirm-modal__container">
+          <img class="confirm-modal__icon" src="./assets/images/icon-order-confirmed.svg" alt="" />
+          <h2 class="confirm-modal__title" id="confirm-modal-title">Order confirmed</h2>
+          <p class="confirm-modal__description" id="confirm-modal-description">We hope you enjoy your food!</p>
+          <div class="confirm-modal__content">
+            <ul class="confirm-modal__item-list">
+              <template id="confirm-modal-item-template">
+                <li class="confirm-modal__item">
+                  <img class="confirm-modal__item-thumbnail" src="" alt="" />
+                  <div class="confirm-modal__item-content">
+                    <h3 class="confirm-modal__item-name"></h3>
+                    <p class="confirm-modal__item-detail">
+                      <span class="confirm-modal__item-quantity"></span>
+                      <span class="confirm-modal__item-price"></span>
+                    </p>
+                  </div>
+                  <span class="confirm-modal__item-subtotal"></span>
+                </li>
+              </template>
+            </ul>
+            <p class="confirm-modal__total">
+              <span class="confirm-modal__total--description"> Order Total </span>
+              <strong class="confirm-modal__total--value"></strong>
+            </p>
+          </div>
+          <button class="confirm-modal__continue-btn btn" type="button">Start New Order</button>
+        </div>
+      </div>
     </main>
 
     <script type="module" src="./ts/main.ts"></script>

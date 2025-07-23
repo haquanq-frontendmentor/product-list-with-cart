@@ -1,0 +1,115 @@
+.confirm-modal {
+    position: fixed;
+    inset: 0;
+    background-color: hsla(0, 0%, 0%, 50%);
+    padding-block: 1.5rem;
+    overflow-y: auto;
+    display: none;
+
+    &[data-open="true"] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__container {
+        background-color: var(--color-rose-50);
+        border-radius: 0.5rem;
+        padding: clamp(1.5rem, 1.1479rem + 1.5023vw, 2.5rem);
+        width: min(100vw - 3rem, 37rem);
+        height: max-content;
+    }
+
+    &__icon {
+        margin-block-end: 1.5rem;
+    }
+
+    &__title {
+        font-size: 2.5rem;
+        line-height: 3rem;
+        color: var(--color-rose-900);
+        margin-block-end: 0.5rem;
+    }
+
+    &__description {
+        font-size: 1rem;
+        line-height: 1.25rem;
+        color: var(--color-rose-500);
+        margin-block-end: 2rem;
+    }
+
+    &__content {
+        margin-block-end: 2rem;
+        padding: 0.5rem 1rem 0;
+        border-radius: 0.5rem;
+        background-color: var(--color-rose-100);
+    }
+
+    &__item-list {
+        list-style: none;
+        padding-block-start: 0.5rem;
+        padding-inline: 0;
+    }
+
+    &__item {
+        display: grid;
+        grid-template-columns: min-content auto min-content;
+        gap: 1rem;
+        align-items: center;
+        font-size: 0.875rem;
+        line-height: 1.1875rem;
+        padding-block: 1rem;
+        border-bottom: 1px solid var(--color-rose-300);
+    }
+
+    &__item-thumbnail {
+        min-width: 2.875rem;
+        aspect-ratio: 1 / 1;
+        border-radius: 0.5rem;
+        border: 1px solid var(--color-rose-300);
+        object-fit: cover;
+        object-position: center center;
+    }
+
+    &__item-name {
+        color: var(--color-rose-900);
+        font-weight: var(--font-semi-bold);
+        margin-block-end: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    &__item-detail {
+        color: var(--color-rose-500);
+        font-weight: var(--font-semi-bold);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    &__item-subtotal {
+        color: var(--color-rose-900);
+        font-weight: var(--font-semi-bold);
+    }
+
+    &__item-quantity {
+        color: var(--color-red-500);
+        padding-right: 0.5rem;
+    }
+
+    &__total {
+        padding-block: 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--color-rose-900);
+
+        &--description {
+            font-size: 0.875rem;
+            font-weight: var(--font-semi-bold);
+        }
+
+        &--value {
+            font-size: 1.5rem;
+        }
+    }
+}

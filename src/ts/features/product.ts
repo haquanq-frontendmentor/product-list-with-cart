@@ -1,5 +1,5 @@
 import { Product } from "../types/Product";
-import { cartStore } from "../stores/cartStore";
+import { CART_ITEM_DEFAULT_QUANTITY, cartActions, cartStore } from "../stores/cartStore";
 import { formatPrice } from "../utils/formatPrice";
 import products from "../data";
 
@@ -8,18 +8,22 @@ productItemTemplate.remove();
 const productItemFragment = productItemTemplate.content;
 
 const createProductItem = (product: Product) => {
-    const clone = productItemFragment.cloneNode(true) as DocumentFragment;
+    const cloned = productItemFragment.cloneNode(true) as DocumentFragment;
 
-    const productItem = clone.querySelector(".products__item") as HTMLLIElement;
-    const productPicture = clone.querySelector(".products__picture") as HTMLImageElement;
-    const productImage = clone.querySelector(".products__image") as HTMLImageElement;
-    const productQuantity = clone.querySelector(".products__quantity") as HTMLSpanElement;
-    const productAddToCartButton = clone.querySelector(".products__add-to-cart-btn") as HTMLButtonElement;
-    const productQuantityDecreaseButton = clone.querySelector(".products__quantity-btn--decrease") as HTMLButtonElement;
-    const productQuantityIncreaseButton = clone.querySelector(".products__quantity-btn--increase") as HTMLButtonElement;
-    const productCategory = clone.querySelector(".products__category") as HTMLParagraphElement;
-    const productName = clone.querySelector(".products__name") as HTMLHeadingElement;
-    const productPrice = clone.querySelector(".products__price") as HTMLParagraphElement;
+    const productWrapper = cloned.querySelector(".products__item") as HTMLLIElement;
+    const productPicture = cloned.querySelector(".products__picture") as HTMLImageElement;
+    const productImage = cloned.querySelector(".products__image") as HTMLImageElement;
+    const productQuantity = cloned.querySelector(".products__quantity") as HTMLSpanElement;
+    const productAddToCartButton = cloned.querySelector(".products__add-to-cart-btn") as HTMLButtonElement;
+    const productQuantityDecreaseButton = cloned.querySelector(
+        ".products__quantity-btn--decrease",
+    ) as HTMLButtonElement;
+    const productQuantityIncreaseButton = cloned.querySelector(
+        ".products__quantity-btn--increase",
+    ) as HTMLButtonElement;
+    const productCategory = cloned.querySelector(".products__category") as HTMLParagraphElement;
+    const productName = cloned.querySelector(".products__name") as HTMLHeadingElement;
+    const productPrice = cloned.querySelector(".products__price") as HTMLParagraphElement;
 
     productPicture.insertBefore(
         (() => {
@@ -39,35 +43,56 @@ const createProductItem = (product: Product) => {
         })(),
         productImage,
     );
+
     productImage.src = product.image.mobile;
     productCategory.textContent = product.category;
     productName.textContent = product.name;
     productPrice.textContent = formatPrice(product.price);
 
-    cartStore.subscribe((currentState) => {
-        const item = currentState.find((v) => v.product.id === product.id);
-        if (!item) return;
-        productQuantity.textContent = item.quantity.toString();
-    }, cartStore.updateItemQuantity.name + product.id);
+    const cartStoreSubsriptionRemovers: (() => void)[] = [];
 
-    cartStore.subscribe(() => {
-        productItem.removeAttribute("data-selected");
-    }, cartStore.removeItem.name + product.id);
+    let cartItemIndex = -1;
+
+    const getCurrentQuantity = () => {
+        return cartStore.getState().items[cartItemIndex].quantity;
+    };
+
+    const unsubcribeCartStoreEvents = () => {
+        cartStoreSubsriptionRemovers.forEach((remover) => remover());
+    };
 
     productAddToCartButton.addEventListener("click", () => {
-        productItem.setAttribute("data-selected", "");
-        cartStore.addItem(product);
+        cartItemIndex = cartActions.addItem({
+            name: product.name,
+            price: product.price,
+            thumbnail: product.image.thumbnail,
+        });
+
+        productQuantity.textContent = CART_ITEM_DEFAULT_QUANTITY.toString();
+        productWrapper.setAttribute("data-selected", "");
+        productQuantityIncreaseButton.focus();
+
+        cartStoreSubsriptionRemovers.push(
+            cartStore.subscribe(() => {
+                productWrapper.removeAttribute("data-selected");
+                unsubcribeCartStoreEvents();
+            }, [cartActions.clear.name, cartActions.removeItem.name + cartItemIndex]),
+        );
     });
 
     productQuantityIncreaseButton.addEventListener("click", () => {
-        cartStore.updateItemQuantity(product.id, (v) => v + 1);
+        const newQuantity = getCurrentQuantity() + 1;
+        cartActions.updateItemQuantity(cartItemIndex, newQuantity);
+        productQuantity.textContent = newQuantity.toString();
     });
 
     productQuantityDecreaseButton.addEventListener("click", () => {
-        cartStore.updateItemQuantity(product.id, (v) => v - 1);
+        const newQuantity = getCurrentQuantity() - 1;
+        cartActions.updateItemQuantity(cartItemIndex, newQuantity);
+        productQuantity.textContent = newQuantity.toString();
     });
 
-    return productItem;
+    return productWrapper;
 };
 
 const productList = document.querySelector(".products__list") as HTMLUListElement;

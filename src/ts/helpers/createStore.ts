@@ -2,16 +2,16 @@ export const createStore = <T>(initialState: T) => {
     let currentState: T = initialState;
     const listenerMap = new Map<string, ((state: T) => void)[]>();
 
-    const getState = () => {
+    const getState = (): T => {
         return JSON.parse(JSON.stringify(currentState));
     };
 
-    const setState = (callback: (state: T) => T | void, listener?: string) => {
+    const setState = (callback: (state: T) => T | void, listeners?: string[]) => {
         const newState = callback(currentState);
         if (newState) currentState = newState;
-        if (listener) {
+        (listeners || []).forEach((listener) => {
             listenerMap.get(listener)?.forEach((fn) => fn(currentState));
-        }
+        });
     };
 
     const subscribe = (callback: (state: T) => void, listeners: string[]) => {

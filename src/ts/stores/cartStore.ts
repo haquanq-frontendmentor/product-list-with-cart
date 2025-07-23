@@ -1,38 +1,93 @@
 import { createStore } from "../helpers/createStore";
-import { Product } from "../types/Product";
 
-type CartState = Array<{ quantity: number; product: Product }>;
+type CartItem = { quantity: number; name: string; price: number; thumbnail: string };
 
-const cartStoreInner = createStore<CartState>([]);
+type CartState = {
+    items: CartItem[];
+    total: number;
+    confirmModalOpen: boolean;
+};
 
-export const cartStore = {
+type CartOperations = {
+    calculateTotal: (state: CartState) => void;
+    updateItemQuantity: (state: CartState, itemIndex: number, value: number) => void;
+    addItem: (state: CartState, item: Omit<CartItem, "quantity">) => number;
+    removeItem: (state: CartState, itemIndex: number) => void;
+    clear: (state: CartState) => void;
+};
+
+const CART_ITEM_DEFAULT_QUANTITY = 1;
+
+const cartOperations: CartOperations = {
+    calculateTotal: (state) => {
+        state.total = state.items.reduce((a, v) => a + v.quantity * v.price, 0);
+    },
+    updateItemQuantity: (state, itemIndex, value) => {
+        state.items[itemIndex].quantity = value;
+    },
+    addItem: (state, newItem) => {
+        const itemIndex = state.items.length;
+        state.items.push({ ...newItem, quantity: CART_ITEM_DEFAULT_QUANTITY });
+        return itemIndex;
+    },
+    removeItem: (state, itemIndex) => {
+        state.items.splice(itemIndex, 1);
+    },
+    clear: (state) => {
+        state.items = [];
+        state.total = 0;
+    },
+};
+
+const cartStore = createStore<CartState>({
+    confirmModalOpen: false,
+    total: 0,
+    items: [],
+});
+
+const cartActions = {
     calculateTotal: () => {
-        const total = cartStoreInner.getState().reduce((a, v) => (a += v.quantity * v.product.price), 0);
-        return total;
-    },
-    updateItemQuantity: (productId: string, callback: (currentValue: number) => number) => {
-        cartStoreInner.setState((currentState) => {
-            const item = currentState.find((v) => v.product.id === productId);
-            if (!item) throw new Error("Invalid product ID");
-            item.quantity = callback(item.quantity);
-            if (item.quantity === 0) cartStore.removeItem(productId);
-        }, cartStore.updateItemQuantity.name + productId);
-    },
-    getItems: () => {
-        return cartStoreInner.getState();
-    },
-    addItem: (product: Product) => {
-        cartStoreInner.setState((v) => {
-            v.push({ product, quantity: 0 });
-        }, cartStore.addItem.name);
-
-        cartStore.updateItemQuantity(product.id, (v) => v + 1);
-    },
-    removeItem: (productId: string) => {
-        cartStoreInner.setState(
-            (v) => v.filter((v) => v.product.id !== productId),
-            cartStore.removeItem.name + productId,
+        cartStore.setState(
+            (state) => {
+                cartOperations.calculateTotal(state);
+            },
+            [cartOperations.calculateTotal.name],
         );
     },
-    subscribe: cartStoreInner.subscribe,
+    updateItemQuantity: (itemIndex: number, value: number) => {
+        cartStore.setState(
+            (state) => {
+                cartOperations.updateItemQuantity(state, itemIndex, value);
+            },
+            [cartOperations.updateItemQuantity.name, cartOperations.updateItemQuantity.name + itemIndex],
+        );
+    },
+    addItem: (newItem: Omit<CartItem, "quantity">) => {
+        let addedAtIndex = -1;
+        cartStore.setState(
+            (state) => {
+                addedAtIndex = cartOperations.addItem(state, newItem);
+            },
+            [cartOperations.addItem.name],
+        );
+        return addedAtIndex;
+    },
+    removeItem: (itemIndex: number) => {
+        cartStore.setState(
+            (state) => {
+                cartOperations.removeItem(state, itemIndex);
+            },
+            [cartOperations.removeItem.name, cartOperations.removeItem.name + itemIndex],
+        );
+    },
+    clear: () => {
+        cartStore.setState(
+            (state) => {
+                cartOperations.clear(state);
+            },
+            [cartOperations.clear.name],
+        );
+    },
 };
+
+export { CART_ITEM_DEFAULT_QUANTITY, cartActions, cartOperations, cartStore, CartItem, CartOperations, CartState };

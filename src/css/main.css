@@ -5,6 +5,7 @@
 @import "./utils/a11y.css";
 
 @import "./components/button.css";
+@import "./components/confirm-modal.css";
 @import "./components/products.css";
 @import "./components/cart.css";
 
