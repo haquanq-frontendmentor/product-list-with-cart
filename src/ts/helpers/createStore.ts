@@ -3,7 +3,7 @@ export const createStore = <T>(initialState: T) => {
     const listenerMap = new Map<string, ((state: T) => void)[]>();
 
     const getState = () => {
-        return currentState;
+        return JSON.parse(JSON.stringify(currentState));
     };
 
     const setState = (callback: (state: T) => T | void, listener?: string) => {
