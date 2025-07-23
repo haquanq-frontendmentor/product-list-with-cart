@@ -1,14 +1,7 @@
-const selectors = [
-    "button:not([disabled])",
-    "[href]",
-    'input:not([disabled]):not([type="hidden"])',
-    "select:not([disabled])",
-    "textarea:not([disabled])",
-    '[tabindex]:not([tabindex="-1"])',
-].join(",");
+import { focusableSelector } from "../constants/focusableSelector";
 
 export const createFocusTrap = (container: HTMLElement) => {
-    let focusableElements: HTMLElement[] = Array.from(container.querySelectorAll<HTMLElement>(selectors));
+    let focusableElements: HTMLElement[] = Array.from(container.querySelectorAll<HTMLElement>(focusableSelector));
     let firstFocusable: HTMLElement | null = focusableElements.at(0) || null;
     let lastFocusable: HTMLElement | null = focusableElements.at(-1) || null;
 
