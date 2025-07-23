@@ -1,3 +1,5 @@
+import { createFocusTrap } from "./createFocusTrap";
+
 type ModalProps<T extends HTMLElement> = {
     wrapper: T;
     container: T;
@@ -21,7 +23,8 @@ export const createModal = <T extends HTMLElement>(props: ModalProps<T>): Modal<
         close: [],
     };
 
-    props.wrapper.setAttribute("tabIndex", "-1");
+    props.container.setAttribute("tabIndex", "-1");
+
     props.container.addEventListener("click", (e) => {
         e.stopPropagation();
     });
@@ -34,13 +37,16 @@ export const createModal = <T extends HTMLElement>(props: ModalProps<T>): Modal<
         if (e.key === "Escape") close();
     };
 
+    let focusTrapDestroyer: () => void;
+
     const open = () => {
         document.body.style.overflow = "hidden";
         props.wrapper.setAttribute("data-open", "true");
         props.wrapper.addEventListener("keydown", handlePressEscape);
         props.wrapper.addEventListener("click", handleClickOutside);
-        props.wrapper.focus();
+        props.container.focus();
         listenerRegistry.open.forEach((fn) => fn(props.wrapper));
+        focusTrapDestroyer = createFocusTrap(props.container);
     };
 
     const close = () => {
@@ -49,6 +55,7 @@ export const createModal = <T extends HTMLElement>(props: ModalProps<T>): Modal<
         props.wrapper.removeEventListener("keydown", handlePressEscape);
         props.wrapper.removeEventListener("click", handleClickOutside);
         listenerRegistry.close.forEach((fn) => fn(props.wrapper));
+        focusTrapDestroyer();
     };
 
     const subscribe = (type: ModalEventType, callback: (wrapper: T) => void) => {
