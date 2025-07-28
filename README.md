@@ -2,21 +2,31 @@
 
 This is a solution to the [Product list with cart challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/product-list-with-cart-5MmqLVAp_d). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-<a href="">
-    <img alt="Solution post" src="https://img.shields.io/badge/Frontendmentor-blue?label=Solution%20on&style=flat-square">
-</a>
-<a href="">
-    <img alt="Live demo" src="https://img.shields.io/badge/Demo-teal?label=Live&style=flat-square">
-</a>
-<a href="./LICENSE"><img allt="MIT License" src="https://badgen.now.sh/badge/license/MIT"/></a>
+<p>
+  <a href="https://www.frontendmentor.io/solutions/accessible-cart-with-keyboard-navigation-zero-media-queries-ooLZnPPDNC">
+    <img
+      alt="Solution post"
+      src="https://img.shields.io/badge/Frontendmentor-blue?label=Solution%20on"
+    /></a>
+  <a href="https://haquanq-frontendmentor.github.io/product-list-with-cart/">
+    <img
+      alt="Live demo"
+      src="https://img.shields.io/badge/Demo-teal?label=Live"
+    /></a>
+  <a href="./LICENSE"
+    ><img
+      allt="MIT License"
+      src="https://img.shields.io/badge/MIT-blue?label=license"
+  /></a>
+</p>
 
 ## Table of contents
 
-- [Project overview](#clipboard-project-overview)
-- [Development workflow](#seedling-development-workflow)
+- [Project overview](#sunrise-project-overview)
+- [Development workflow](#stars-development-workflow)
 - [Working in this repository](#astronaut-working-in-this-repository)
 
-## :clipboard: Project overview
+## :sunrise: Project overview
 
 ### Challenge requirements
 
@@ -27,22 +37,28 @@ This is a solution to the [Product list with cart challenge on Frontend Mentor](
 - View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
-### Implemented features
+### Todo
 
 Features
 
-- [x] Manage cart of products, confirm current order
+- [x] Manage cart of items
+  - [x] Remove single item
+  - [x] Reset cart state
+- [x] Interactive product cards
+  - [x] Add selected product to cart
+  - [x] Increase/decrease quantity of selected product
 
 Accessibility
 
-- [x] Site is responsive to different screen size
+- [x] Site is responsive to different screen sizes
 - [x] Interactive elements have clear indicator when focused/hovered
+- [x] Use keyboard to navigate list of items and inner controls
 
 ### Preview
 
 ![](./docs/design/desktop-design-empty.jpg)
 
-## :seedling: Development workflow
+## :stars: Development workflow
 
 ### Approach
 
@@ -51,7 +67,7 @@ Site built with mobile-first workflow to prioritize mobile devices, made accessi
 ### Tools
 
 - **PostCSS**: use SASS-like features in vanilla CSS, interpolation and minification.
-- **JavaScript**: add interactivity for components, handle application logic.
+- **TypeScript**: add interactivity for components, handle application logic.
 - **Vite**: fast development server, production build and easy configuration.
 - **Prettier**: code formatter to maintain consistent coding style.
 - **Stylelint**: lint for CSS coding convention mistakes.
@@ -75,7 +91,7 @@ Having these tools installed:
 Open new terminal, run the following command:
 
 ```
-git clone https://github.com/haquanq/fm-product-list-with-cart.git
+git clone https://github.com/haquanq-frontendmentor/product-list-with-cart.git
 ```
 
 Then, run `npm install` to install all dependencies.
@@ -84,7 +100,7 @@ Then, run `npm install` to install all dependencies.
 npm install
 ```
 
-### Development workflow
+### Start development server
 
 In terminal, run `npm run dev` to start development server:
 
