@@ -5,6 +5,7 @@ import { createRovingFocus } from "../helpers/createRovingFocus";
 
 const cartWrapper = document.querySelector(".cart") as HTMLElement;
 const cartItemList = document.querySelector(".cart__item-list") as HTMLUListElement;
+const cartItemCount = document.querySelector(".cart__item-count") as HTMLElement;
 const cartTotal = document.querySelector(".cart__total--value") as HTMLElement;
 const cartConfirmButton = document.querySelector(".cart__confirm-btn") as HTMLButtonElement;
 
@@ -103,6 +104,7 @@ cartStore.subscribe(() => {
 cartStore.subscribe(
     (currentState) => {
         cartTotal.textContent = formatPrice(currentState.total);
+        cartItemCount.textContent = currentState.items.length.toString();
     },
     [cartActions.calculateTotal.name],
 );
