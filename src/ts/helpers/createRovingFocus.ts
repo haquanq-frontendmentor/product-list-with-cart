@@ -118,8 +118,8 @@ export const createRovingFocus = (container: HTMLElement, settings?: RovingFocus
             newItem.element.removeEventListener("click", handleItemClick);
             newItem.element.removeEventListener("blur", handleItemBlur);
 
+            focusItemAtIndex(Math.min(itemIndex + 1, Math.max(items.length - 2, 0)));
             items.splice(itemIndex, 1);
-            focusItemAtIndex(Math.min(itemIndex, items.length - 1));
             if (hasNoItems()) currentIndex = -1;
         };
     };
