@@ -1,6 +1,7 @@
 import { formatPrice } from "../utils/formatPrice";
 import { cartActions, CartItem, cartStore } from "../stores/cartStore";
 import { createModal } from "../helpers/createModal";
+import { createRovingFocus } from "../helpers/createRovingFocus";
 
 const cartWrapper = document.querySelector(".cart") as HTMLElement;
 const cartItemList = document.querySelector(".cart__item-list") as HTMLUListElement;
@@ -15,6 +16,8 @@ const confirmModalCartItemTemplate = document.querySelector("#confirm-modal-item
 confirmModalCartItemTemplate.remove();
 const confirmModalCartItemFragment = confirmModalCartItemTemplate.content;
 
+const cartItemListRovingFocus = createRovingFocus(cartItemList);
+
 const createCartItem = (item: CartItem) => {
     const cloned = cartItemFragment.cloneNode(true) as DocumentFragment;
 
@@ -26,16 +29,32 @@ const createCartItem = (item: CartItem) => {
     const itemSubtotal = cloned.querySelector(".cart__item-subtotal") as HTMLHeadingElement;
     const itemRemoveButton = cloned.querySelector(".cart__item-remove-btn") as HTMLButtonElement;
 
-    const storeSubscriptions: (() => void)[] = [];
-
     itemName.textContent = item.name;
     itemThumbnail.src = item.thumbnail;
     itemPrice.textContent = "@ " + formatPrice(item.price);
     itemQuantity.textContent = "1x";
     itemSubtotal.textContent = formatPrice(item.price);
 
+    const itemActionRovingFocus = createRovingFocus(itemRemoveButton, {
+        disableOnBlur: true,
+        escapeElement: itemWrapper,
+    });
+    itemActionRovingFocus.addItem(itemRemoveButton);
+    const destroyItemRovingFocus = cartItemListRovingFocus.addItem(itemWrapper);
+    itemActionRovingFocus.disable();
+
+    const storeSubscriptions: (() => void)[] = [];
+
     itemRemoveButton.addEventListener("click", () => {
         cartActions.removeItem(item.id);
+    });
+
+    itemWrapper.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            itemActionRovingFocus.enable();
+            itemActionRovingFocus.selectFirstItem();
+        }
     });
 
     storeSubscriptions.push(
@@ -50,6 +69,7 @@ const createCartItem = (item: CartItem) => {
         cartStore.subscribe(() => {
             itemWrapper.remove();
             storeSubscriptions.forEach((destroyCallback) => destroyCallback());
+            destroyItemRovingFocus();
         }, [cartActions.removeItem.name + item.id, cartActions.clear.name]),
     );
 
