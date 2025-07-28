@@ -20,8 +20,8 @@
     }
 
     &__title {
-        font-size: 1.75rem;
-        line-height: 2rem;
+        font-size: 2rem;
+        line-height: 2.5rem;
         color: var(--color-rose-900);
         margin-block-end: 1rem;
     }
@@ -31,6 +31,8 @@
         line-height: 1.25rem;
         color: var(--color-rose-500);
         margin-block-end: 2rem;
+        display: grid;
+        gap: 1rem;
 
         &--key {
             background-color: var(--color-rose-100);
