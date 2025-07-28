@@ -85,7 +85,8 @@ export const createRovingFocus = (container: HTMLElement, settings?: RovingFocus
 
     const addItem = (element: HTMLElement) => {
         const handleItemClick = () => {
-            focusItemAtIndex(newItemIndex);
+            items[currentIndex].element.setAttribute("tabIndex", "-1");
+            items[newItemIndex].element.setAttribute("tabIndex", "0");
         };
 
         const handleItemBlur = () => {

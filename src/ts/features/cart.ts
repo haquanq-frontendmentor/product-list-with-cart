@@ -8,6 +8,7 @@ const cartItemList = document.querySelector(".cart__item-list") as HTMLUListElem
 const cartItemCount = document.querySelector(".cart__item-count") as HTMLElement;
 const cartTotal = document.querySelector(".cart__total--value") as HTMLElement;
 const cartConfirmButton = document.querySelector(".cart__confirm-btn") as HTMLButtonElement;
+const cartMessage = document.querySelector(".cart__message") as HTMLElement;
 
 const cartItemTemplate = document.querySelector("#cart-item-template") as HTMLTemplateElement;
 const cartItemFragment = cartItemTemplate.content;
@@ -18,6 +19,16 @@ confirmModalCartItemTemplate.remove();
 const confirmModalCartItemFragment = confirmModalCartItemTemplate.content;
 
 const cartItemListRovingFocus = createRovingFocus(cartItemList);
+
+let cartMessageTimeout = -1;
+
+const setCartMessage = (message: string) => {
+    clearTimeout(cartMessageTimeout);
+
+    cartMessageTimeout = setTimeout(() => {
+        cartMessage.textContent = `${message} (total ${formatPrice(cartStore.getState().total)})`;
+    }, 300);
+};
 
 const createCartItem = (item: CartItem) => {
     const cloned = cartItemFragment.cloneNode(true) as DocumentFragment;
@@ -62,6 +73,7 @@ const createCartItem = (item: CartItem) => {
         cartStore.subscribe(() => {
             itemQuantity.textContent = item.quantity.toString() + "x";
             itemSubtotal.textContent = formatPrice(item.quantity * item.price);
+            setCartMessage(item.name + " quantity is now " + item.quantity);
             if (item.quantity === 0) cartActions.removeItem(item.id);
         }, [cartActions.updateItemQuantity.name + item.id]),
     );
@@ -71,9 +83,11 @@ const createCartItem = (item: CartItem) => {
             itemWrapper.remove();
             storeSubscriptions.forEach((destroyCallback) => destroyCallback());
             destroyItemRovingFocus();
+            setCartMessage(item.name + " removed from cart");
         }, [cartActions.removeItem.name + item.id, cartActions.clear.name]),
     );
 
+    setCartMessage(item.name + " added to cart");
     return itemWrapper;
 };
 
@@ -145,6 +159,7 @@ confirmModal.subscribe("open", (wrapper) => {
     const handleConfirmButtonClick = () => {
         cartActions.clear();
         confirmModal.close();
+        setCartMessage("You cart is now empty");
     };
 
     continueButton.addEventListener("click", handleConfirmButtonClick);
@@ -157,4 +172,5 @@ confirmModal.subscribe("open", (wrapper) => {
 
 cartConfirmButton.addEventListener("click", () => {
     confirmModal.open();
+    setCartMessage("Confirming order");
 });

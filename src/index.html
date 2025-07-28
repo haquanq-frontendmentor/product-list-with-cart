@@ -36,7 +36,7 @@
                     <button
                       class="products__quantity-btn products__quantity-btn--increase"
                       type="button"
-                      aria-label="Decrease quantity"
+                      aria-label="Increase quantity"
                     >
                       <svg
                         class="products__quantity-btn--icon"
@@ -53,7 +53,7 @@
                     <button
                       class="products__quantity-btn products__quantity-btn--decrease"
                       type="button"
-                      aria-label="Increase quantity"
+                      aria-label="Decrease quantity"
                     >
                       <svg
                         class="products__quantity-btn--icon"
@@ -73,6 +73,7 @@
           </ul>
         </section>
         <section class="cart" data-empty>
+          <p class="cart__message sr-only" aria-live="polite" role="status"></p>
           <h2 class="cart__title">
             Your Cart &#40;<span class="cart__item-count">0</span><span class="sr-only">&nbsp;items</span>&#41;
           </h2>
