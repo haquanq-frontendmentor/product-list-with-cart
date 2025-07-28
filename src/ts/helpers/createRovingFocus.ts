@@ -33,8 +33,6 @@ export const createRovingFocus = (container: HTMLElement, settings?: RovingFocus
             prevActiveElement = document.activeElement as HTMLElement;
         }
 
-        console.log(currentIndex, nextIndex);
-
         items[currentIndex].element.setAttribute("tabIndex", "-1");
         items[nextIndex].element.setAttribute("tabIndex", "0");
         items[nextIndex].element.focus();
