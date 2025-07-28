@@ -33,6 +33,8 @@ export const createRovingFocus = (container: HTMLElement, settings?: RovingFocus
             prevActiveElement = document.activeElement as HTMLElement;
         }
 
+        console.log(currentIndex, nextIndex);
+
         items[currentIndex].element.setAttribute("tabIndex", "-1");
         items[nextIndex].element.setAttribute("tabIndex", "0");
         items[nextIndex].element.focus();
@@ -87,6 +89,7 @@ export const createRovingFocus = (container: HTMLElement, settings?: RovingFocus
         const handleItemClick = () => {
             items[currentIndex].element.setAttribute("tabIndex", "-1");
             items[newItemIndex].element.setAttribute("tabIndex", "0");
+            currentIndex = newItemIndex;
         };
 
         const handleItemBlur = () => {
@@ -119,7 +122,10 @@ export const createRovingFocus = (container: HTMLElement, settings?: RovingFocus
             newItem.element.removeEventListener("click", handleItemClick);
             newItem.element.removeEventListener("blur", handleItemBlur);
 
-            focusItemAtIndex(Math.min(itemIndex + 1, Math.max(items.length - 2, 0)));
+            if (itemIndex === currentIndex) {
+                focusItemAtIndex(itemIndex === items.length - 1 ? Math.max(0, itemIndex - 1) : itemIndex + 1);
+            }
+
             items.splice(itemIndex, 1);
             if (hasNoItems()) currentIndex = -1;
         };
