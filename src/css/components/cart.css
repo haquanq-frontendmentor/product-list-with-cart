@@ -45,14 +45,29 @@
     }
 
     &__item {
-        display: grid;
-        grid-template-columns: min-content auto min-content;
-        gap: 1rem;
-        align-items: center;
         font-size: 0.875rem;
         line-height: 1.1875rem;
         padding-block: 1rem;
         border-bottom: 1px solid var(--color-rose-300);
+    }
+
+    &__item-inner {
+        display: grid;
+        grid-template-columns: min-content auto min-content;
+        gap: 1rem;
+        align-items: center;
+        border-radius: 0.25rem;
+    }
+
+    @supports selector(:focus-visible) {
+        &__item:focus {
+            outline: 0;
+        }
+
+        &__item:focus-visible &__item-inner {
+            outline-offset: 6px;
+            outline: 3px dashed var(--color-rose-900);
+        }
     }
 
     &__item-thumbnail {
@@ -110,6 +125,13 @@
 
         @media (prefers-reduced-motion: reduce) {
             transition: none;
+        }
+
+        @supports selector(:focus-visible) {
+            &:focus-visible {
+                outline-style: dashed;
+                outline-color: var(--color-red-500);
+            }
         }
     }
 

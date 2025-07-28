@@ -20,6 +20,7 @@
         display: flex;
         flex-direction: column;
         outline: 0;
+        border-radius: 0.5rem;
     }
 
     &__picture {
@@ -158,5 +159,16 @@
 
     &__item[data-selected] &__quantity-wrapper {
         display: flex;
+    }
+
+    &__item[data-selected] &__picture {
+        box-shadow: 0 0 0 3px var(--color-red-500);
+    }
+
+    @supports selector(:focus-visible) {
+        &__item:focus-visible &__picture {
+            outline: 3px dashed var(--color-rose-900);
+            outline-offset: 6px;
+        }
     }
 }
