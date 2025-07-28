@@ -1,5 +1,5 @@
 import { Product } from "../types/Product";
-import { CART_ITEM_DEFAULT_QUANTITY, cartActions, cartStore } from "../stores/cartStore";
+import { CART_ITEM_DEFAULT_QUANTITY, cartActions, CartItem, cartStore } from "../stores/cartStore";
 import { formatPrice } from "../utils/formatPrice";
 import products from "../data";
 
@@ -51,22 +51,20 @@ const createProductItem = (product: Product) => {
 
     const cartStoreSubsriptionRemovers: (() => void)[] = [];
 
-    let cartItemIndex = -1;
-
-    const getCurrentQuantity = () => {
-        return cartStore.getState().items[cartItemIndex].quantity;
-    };
+    let cartItemRef: CartItem | null;
 
     const unsubcribeCartStoreEvents = () => {
         cartStoreSubsriptionRemovers.forEach((remover) => remover());
     };
 
     productAddToCartButton.addEventListener("click", () => {
-        cartItemIndex = cartActions.addItem({
+        cartItemRef = cartActions.addItem({
             name: product.name,
             price: product.price,
             thumbnail: product.image.thumbnail,
         });
+
+        if (cartItemRef === null) return;
 
         productQuantity.textContent = CART_ITEM_DEFAULT_QUANTITY.toString();
         productWrapper.setAttribute("data-selected", "");
@@ -76,19 +74,21 @@ const createProductItem = (product: Product) => {
             cartStore.subscribe(() => {
                 productWrapper.removeAttribute("data-selected");
                 unsubcribeCartStoreEvents();
-            }, [cartActions.clear.name, cartActions.removeItem.name + cartItemIndex]),
+            }, [cartActions.clear.name, cartActions.removeItem.name + cartItemRef.id]),
         );
     });
 
     productQuantityIncreaseButton.addEventListener("click", () => {
-        const newQuantity = getCurrentQuantity() + 1;
-        cartActions.updateItemQuantity(cartItemIndex, newQuantity);
+        if (cartItemRef === null) return;
+        const newQuantity = cartItemRef.quantity + 1;
+        cartActions.updateItemQuantity(cartItemRef.id, newQuantity);
         productQuantity.textContent = newQuantity.toString();
     });
 
     productQuantityDecreaseButton.addEventListener("click", () => {
-        const newQuantity = getCurrentQuantity() - 1;
-        cartActions.updateItemQuantity(cartItemIndex, newQuantity);
+        if (cartItemRef === null) return;
+        const newQuantity = cartItemRef.quantity + 1;
+        cartActions.updateItemQuantity(cartItemRef.id, newQuantity);
         productQuantity.textContent = newQuantity.toString();
     });
 

@@ -15,7 +15,7 @@ const confirmModalCartItemTemplate = document.querySelector("#confirm-modal-item
 confirmModalCartItemTemplate.remove();
 const confirmModalCartItemFragment = confirmModalCartItemTemplate.content;
 
-const createCartItem = (item: CartItem, itemIndex: number) => {
+const createCartItem = (item: CartItem) => {
     const cloned = cartItemFragment.cloneNode(true) as DocumentFragment;
 
     const itemWrapper = cloned.querySelector(".cart__item") as HTMLLIElement;
@@ -35,26 +35,22 @@ const createCartItem = (item: CartItem, itemIndex: number) => {
     itemSubtotal.textContent = formatPrice(item.price);
 
     itemRemoveButton.addEventListener("click", () => {
-        cartActions.removeItem(itemIndex);
+        cartActions.removeItem(item.id);
     });
 
     storeSubscriptions.push(
-        cartStore.subscribe(
-            (currentState) => {
-                const item = currentState.items[itemIndex];
-                itemQuantity.textContent = item.quantity.toString() + "x";
-                itemSubtotal.textContent = formatPrice(item.quantity * item.price);
-                if (item.quantity === 0) cartActions.removeItem(itemIndex);
-            },
-            [cartActions.updateItemQuantity.name + itemIndex],
-        ),
+        cartStore.subscribe(() => {
+            itemQuantity.textContent = item.quantity.toString() + "x";
+            itemSubtotal.textContent = formatPrice(item.quantity * item.price);
+            if (item.quantity === 0) cartActions.removeItem(item.id);
+        }, [cartActions.updateItemQuantity.name + item.id]),
     );
 
     storeSubscriptions.push(
         cartStore.subscribe(() => {
             itemWrapper.remove();
             storeSubscriptions.forEach((destroyCallback) => destroyCallback());
-        }, [cartActions.removeItem.name + itemIndex, cartActions.clear.name]),
+        }, [cartActions.removeItem.name + item.id, cartActions.clear.name]),
     );
 
     return itemWrapper;
@@ -63,7 +59,7 @@ const createCartItem = (item: CartItem, itemIndex: number) => {
 cartStore.subscribe(
     (currentState) => {
         cartWrapper.removeAttribute("data-empty");
-        cartItemList.appendChild(createCartItem(currentState.items.at(-1) as CartItem, currentState.items.length - 1));
+        cartItemList.appendChild(createCartItem(currentState.items.at(-1) as CartItem));
     },
     [cartActions.addItem.name],
 );

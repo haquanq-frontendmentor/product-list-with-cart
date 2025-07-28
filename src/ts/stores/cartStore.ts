@@ -1,6 +1,6 @@
 import { createStore } from "../helpers/createStore";
 
-type CartItem = { quantity: number; name: string; price: number; thumbnail: string };
+type CartItem = { id: string; quantity: number; name: string; price: number; thumbnail: string };
 
 type CartState = {
     items: CartItem[];
@@ -10,28 +10,35 @@ type CartState = {
 
 type CartOperations = {
     calculateTotal: (state: CartState) => void;
-    updateItemQuantity: (state: CartState, itemIndex: number, value: number) => void;
-    addItem: (state: CartState, item: Omit<CartItem, "quantity">) => number;
-    removeItem: (state: CartState, itemIndex: number) => void;
+    updateItemQuantity: (state: CartState, itemId: string, value: number) => void;
+    addItem: (state: CartState, item: Omit<CartItem, "quantity" | "id">) => CartItem;
+    removeItem: (state: CartState, itemId: string) => void;
     clear: (state: CartState) => void;
 };
 
 const CART_ITEM_DEFAULT_QUANTITY = 1;
+let globalItemId = 0;
 
 const cartOperations: CartOperations = {
     calculateTotal: (state) => {
         state.total = state.items.reduce((a, v) => a + v.quantity * v.price, 0);
     },
-    updateItemQuantity: (state, itemIndex, value) => {
-        state.items[itemIndex].quantity = value;
+    updateItemQuantity: (state, itemId, value) => {
+        const item = state.items.find((v) => v.id === itemId);
+        if (item === undefined) throw new Error("Can't find cart item with ID: " + itemId);
+        item.quantity = value;
     },
     addItem: (state, newItem) => {
-        const itemIndex = state.items.length;
-        state.items.push({ ...newItem, quantity: CART_ITEM_DEFAULT_QUANTITY });
-        return itemIndex;
+        const addedItem: CartItem = {
+            ...newItem,
+            id: (globalItemId++).toString(),
+            quantity: CART_ITEM_DEFAULT_QUANTITY,
+        };
+        state.items.push(addedItem);
+        return addedItem;
     },
-    removeItem: (state, itemIndex) => {
-        state.items.splice(itemIndex, 1);
+    removeItem: (state, itemId) => {
+        state.items = state.items.filter((v) => v.id !== itemId);
     },
     clear: (state) => {
         state.items = [];
@@ -54,30 +61,30 @@ const cartActions = {
             [cartOperations.calculateTotal.name],
         );
     },
-    updateItemQuantity: (itemIndex: number, value: number) => {
+    updateItemQuantity: (itemId: string, value: number) => {
         cartStore.setState(
             (state) => {
-                cartOperations.updateItemQuantity(state, itemIndex, value);
+                cartOperations.updateItemQuantity(state, itemId, value);
             },
-            [cartOperations.updateItemQuantity.name, cartOperations.updateItemQuantity.name + itemIndex],
+            [cartOperations.updateItemQuantity.name, cartOperations.updateItemQuantity.name + itemId],
         );
     },
-    addItem: (newItem: Omit<CartItem, "quantity">) => {
-        let addedAtIndex = -1;
+    addItem: (newItem: Omit<CartItem, "quantity" | "id">): CartItem | null => {
+        let addedCartItem: CartItem | null = null;
         cartStore.setState(
             (state) => {
-                addedAtIndex = cartOperations.addItem(state, newItem);
+                addedCartItem = cartOperations.addItem(state, newItem);
             },
             [cartOperations.addItem.name],
         );
-        return addedAtIndex;
+        return addedCartItem;
     },
-    removeItem: (itemIndex: number) => {
+    removeItem: (itemId: string) => {
         cartStore.setState(
             (state) => {
-                cartOperations.removeItem(state, itemIndex);
+                cartOperations.removeItem(state, itemId);
             },
-            [cartOperations.removeItem.name, cartOperations.removeItem.name + itemIndex],
+            [cartOperations.removeItem.name, cartOperations.removeItem.name + itemId],
         );
     },
     clear: () => {
