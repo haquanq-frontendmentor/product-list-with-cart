@@ -6,6 +6,7 @@
 
 @import "./components/button.css";
 @import "./components/confirm-modal.css";
+@import "./components/guide-modal.css";
 @import "./components/products.css";
 @import "./components/cart.css";
 

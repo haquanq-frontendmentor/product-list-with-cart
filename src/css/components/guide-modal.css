@@ -1,0 +1,44 @@
+.guide-modal {
+    position: fixed;
+    inset: 0;
+    background-color: hsla(0, 0%, 0%, 50%);
+    padding-block: 1.5rem;
+    overflow-y: auto;
+    display: none;
+
+    &[data-open="true"] {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__container {
+        background-color: var(--color-rose-50);
+        border-radius: 0.5rem;
+        padding: clamp(1.5rem, 1.1479rem + 1.5023vw, 2.5rem);
+        width: min(100vw - 3rem, 37rem);
+        margin: auto;
+    }
+
+    &__title {
+        font-size: 1.75rem;
+        line-height: 2rem;
+        color: var(--color-rose-900);
+        margin-block-end: 1rem;
+    }
+
+    &__description {
+        font-size: 1rem;
+        line-height: 1.25rem;
+        color: var(--color-rose-500);
+        margin-block-end: 2rem;
+
+        &--key {
+            background-color: var(--color-rose-100);
+            font-size: 0.875rem;
+            border-radius: 0.25rem;
+            padding: 0 0.25rem;
+            font-weight: var(--font-semi-bold);
+            color: var(--color-rose-900);
+        }
+    }
+}
