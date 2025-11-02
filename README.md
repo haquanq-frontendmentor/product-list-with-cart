@@ -20,6 +20,8 @@ This is a solution to the [Product list with cart challenge on Frontend Mentor](
   /></a>
 </p>
 
+![](./docs/preview.jpg)
+
 ## Table of contents
 
 - [Project overview](#sunrise-project-overview)
@@ -53,10 +55,6 @@ Accessibility
 - [x] Site is responsive to different screen sizes
 - [x] Interactive elements have clear indicator when focused/hovered
 - [x] Use keyboard to navigate list of items and inner controls
-
-### Preview
-
-![](./docs/design/desktop-design-empty.jpg)
 
 ## :stars: Tech Stack and Approach
 
@@ -101,4 +99,4 @@ pnpm dev
 
 ## :maple_leaf: Deployment
 
-Deployed to Github Pages via Github Actions (manually triggered).
+Deployed to Github Pages via Github Action.
